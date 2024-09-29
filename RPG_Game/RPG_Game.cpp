@@ -61,6 +61,30 @@ typedef struct {
     int cooldown;//Перезарядка способности
 } Ability;
 
+//Функция создания персонажа
+void initCharacter(Player* character, const char* name, int health, int level, int attack_power) {
+    strcpy(character->name, name); //Копируем имя персонажа в структуру
+    character->health = health;//Устанавливаем здоровье
+    character->level = level;//Устанавливаем уровень
+    character->attack_power = attack_power;//Устанавливаем силу персонажа
+}
+
+//Функция для добавления предметов в локацию
+void addItemToLocation(Location* loc, Item item) {
+    if (loc->itemCount < 10) { // Проверяем, есть ли место для нового предмета
+        loc->items[loc->itemCount++] = item; // Добавляем предмет и увеличиваем счётчик
+    }
+}
+
+//Фунция вывода содержимого инвентаря
+void printInventory(const Inventory* inv) {
+    printf("Инвентарь:\n");
+    for (int i = 0; i < inv->itemCount; i++) {
+        printf(" - %s (Количество: %d)\n", inv->items[i].name, inv->items[i].value);
+    }
+}
+
+
 
 int main()
 {
