@@ -76,11 +76,12 @@ void addItemToLocation(Location* loc, Item item) {
     }
 }
 
-//Фунция вывода содержимого инвентаря
-void printInventory(const Inventory* inv) {
-    printf("Инвентарь:\n");
-    for (int i = 0; i < inv->itemCount; i++) {
-        printf(" - %s (Количество: %d)\n", inv->items[i].name, inv->items[i].value);
+//Фунция вывода информации о локации
+void printLocation(const Location* loc) {
+    printf("Локация: %s\n", loc->description);
+    printf("Предметы в локации:\n");
+    for (int i = 0; i < loc->itemCount; i++) {
+        printf("-%s (Стоимость: %d)\n", loc->items[i].name, loc->items[i].value);
     }
 }
 
@@ -89,6 +90,27 @@ void printInventory(const Inventory* inv) {
 int main()
 {
 	setlocale(LC_ALL, "RU");
+
+    //Статическая переменная персонажа
+    Player hero;
+    initCharacter(&hero, "Hero", 100, 0, 10); //Создание персонажа с именем hero, здоровьем 100, уровнем 0 и силой 10
+
+
+    //Динамическая переменная для локации
+    Location* dungeon = (Location*)malloc(sizeof(Location));
+    strcpy(dungeon->description, "Темное и пугающее подземелье");
+    dungeon->itemCount = 0;
+
+    //Создание предмета и добавление его в локацию
+    Item sword = { "Sword", 150, 0};
+    addItemToLocation(dungeon, sword);
+
+
+    //Печать информации о локации
+    printLocation(dungeon); // Печать инвентаря локации
+
+    //Освобождение памяти
+    free(dungeon);
 
     
     return 0;
