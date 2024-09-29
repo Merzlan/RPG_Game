@@ -84,7 +84,13 @@ void printLocation(const Location* loc) {
         printf("-%s (Стоимость: %d)\n", loc->items[i].name, loc->items[i].value);
     }
 }
-
+//Функция вывода информации о персонаже
+void printPlayerInfo(const Player* player) {
+    printf("Персонаж: %s\n", player->name);
+    printf("Здоровье: %d\n", player->health);
+    printf("Уровень: %d\n", player->level);
+    printf("Сила атаки: %d\n", player->attack_power);
+}
 
 
 int main()
@@ -109,6 +115,9 @@ int main()
     //Печать информации о локации
     printLocation(dungeon); // Печать инвентаря локации
 
+    // Вывод информации о персонаже
+    printPlayerInfo(&hero); // Передаем адрес объекта в функцию
+    
     //Освобождение памяти
     free(dungeon);
 
