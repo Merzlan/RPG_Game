@@ -29,13 +29,45 @@ public:
     }
 };
 
+//Класс существа
+class Enemy {
+private:
+    std::string name;   // Имя врага
+    int health;         // Очки здоровья врага
+    int attackPower;    // Сила атаки врага
+
+public:
+    Enemy(const std::string& name, int health, int attackPower)
+        : name(name), health(health), attackPower(attackPower) {}
+
+    //Метод для вывода информации о враге
+    void printInfo() const {
+        std::cout << "Существо: " << name << "\nЗдоровье: " << health
+            << "\nСила атаки: " << attackPower << "\n";
+    }
+};
+
+//Класс предмета
+class Item {
+private:
+    std::string name; // Имя предмета
+    int value;        // Ценность предмета
+    int type;         // Тип предмета (например, оружие или снаряжение)
+
+public:
+    Item(const std::string& name, int value, int type)
+        : name(name), value(value), type(type) {}
+
+    //Метод для получения свойств предмета
+    std::string getName() const { return name; }
+    int getValue() const { return value; }
+    int getType() const { return type; }
+};
+
+
+
 /*
-//Структура существа
-typedef struct {
-    char name[50];//Имя сущности
-    int health;//Значение здоровья сущности
-    int attack_power;//Значение силы сущности
-} Enemy;
+
 
 //Структура предмета
 typedef struct {
