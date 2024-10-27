@@ -6,14 +6,30 @@
 #include <string.h>
 #include <locale.h>
 
-//Структура персонажа
-typedef struct {
-    char name[50]; //Имя персонажа
-    int health; //Значение здоровья персонажа
-    int level; //Уровень персонажа
-    int attack_power; //Значение силы персонажа
-} Player;
+#include <string>
+#include <vector>
 
+//Класс персонажа
+class Player {
+private:
+    std::string name;   // Имя персонажа
+    int health;         // Очки здоровья персонажа
+    int level;          // Уровень персонажа
+    int attackPower;    // Сила атаки персонажа
+
+public:
+    // Конструктор класса Player
+    Player(const std::string& name, int health, int level, int attackPower)
+        : name(name), health(health), level(level), attackPower(attackPower) {}
+
+    // Метод для вывода информации о персонаже
+    void printInfo() const {
+        std::cout << "Персонаж: " << name << "\nЗдоровье: " << health << "\nУровень: " << level
+            << "\nСила атаки: " << attackPower << "\n";
+    }
+};
+
+/*
 //Структура существа
 typedef struct {
     char name[50];//Имя сущности
@@ -91,35 +107,11 @@ void printPlayerInfo(const Player* player) {
     printf("Уровень: %d\n", player->level);
     printf("Сила атаки: %d\n", player->attack_power);
 }
-
+*/
 
 int main()
 {
 	setlocale(LC_ALL, "RU");
-
-    //Статическая переменная персонажа
-    Player hero;
-    initCharacter(&hero, "Hero", 100, 0, 10); //Создание персонажа с именем hero, здоровьем 100, уровнем 0 и силой 10
-
-
-    //Динамическая переменная для локации
-    Location* dungeon = (Location*)malloc(sizeof(Location));
-    strcpy(dungeon->description, "Темное и пугающее подземелье");
-    dungeon->itemCount = 0;
-
-    //Создание предмета и добавление его в локацию
-    Item sword = { "Sword", 150, 0};
-    addItemToLocation(dungeon, sword);
-
-
-    //Печать информации о локации
-    printLocation(dungeon); // Печать инвентаря локации
-
-    // Вывод информации о персонаже
-    printPlayerInfo(&hero); // Передаем адрес объекта в функцию
-    
-    //Освобождение памяти
-    free(dungeon);
 
     
     return 0;
