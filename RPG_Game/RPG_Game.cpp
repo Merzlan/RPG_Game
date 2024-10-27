@@ -64,6 +64,29 @@ public:
     int getType() const { return type; }
 };
 
+//Класс локации
+class Location {
+private:
+    std::string description; // Описание локации
+    std::vector<Item> items; // Массив предметов в локации
+
+public:
+    Location(const std::string& description) : description(description) {}
+
+    //Метод для добавления предмета в локацию
+    void addItem(const Item& item) {
+        if (items.size() < 10) {
+            items.push_back(item);
+        }
+    }
+    //Метод для вывода информации о локации и предметах в ней.
+    void printInfo() const {
+        std::cout << "Локация: " << description << "\nПредметы в локации:\n";
+        for (const auto& item : items) {
+            std::cout << "- " << item.getName() << " (Стоимость: " << item.getValue() << ")\n";
+        }
+    }
+};
 
 
 /*
