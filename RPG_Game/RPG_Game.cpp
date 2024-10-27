@@ -88,6 +88,85 @@ public:
     }
 };
 
+//Класс квеста
+class Quest {
+private:
+    std::string title;        // Название квеста
+    std::string description;  // Описание квеста
+    bool isCompleted;         // Статус выполнения квеста
+
+public:
+    Quest(const std::string& title, const std::string& description, bool isCompleted = false)
+        : title(title), description(description), isCompleted(isCompleted) {}
+
+    //Метод для завершения квеста
+    void complete() { isCompleted = true; }
+
+
+    //Метод вывода информации о квесте
+    void printInfo() const {
+        std::cout << "Квест: " << title << "\nОписание: " << description
+            << "\nЗавершен: " << (isCompleted ? "Да" : "Нет") << "\n";
+    }
+};
+
+//Класс инвентаря
+class Inventory {
+private:
+    std::vector<Item> items; // Массив предметов в инвентаре
+
+public:
+    //Метод добавления предмета в инвентарь
+    void addItem(const Item& item) {
+        if (items.size() < 20) {
+            items.push_back(item);
+        }
+    }
+    //Метод вывода списка предметов из инвентаря
+    void printInfo() const {
+        std::cout << "Инвентарь:\n";
+        for (const auto& item : items) {
+            std::cout << "- " << item.getName() << " (Стоимость: " << item.getValue() << ")\n";
+        }
+    }
+};
+
+//Класс события
+class Event {
+private:
+    std::string description; // Описание события
+    bool isTriggered;        // Флаг, показывающий, произошло ли событие
+
+public:
+    Event(const std::string& description, bool isTriggered = false)
+        : description(description), isTriggered(isTriggered) {}
+
+    //Метод для завершения события
+    void trigger() { isTriggered = true; }
+
+    //Метод вывода информации о событии
+    void printInfo() const {
+        std::cout << "Событие: " << description << "\nСработано: " << (isTriggered ? "Да" : "Нет") << "\n";
+    }
+};
+
+//Класс способности
+class Ability {
+private:
+    std::string name; // Название способности
+    int power;        // Сила способности
+    int cooldown;     // Время перезарядки способности
+
+public:
+    Ability(const std::string& name, int power, int cooldown)
+        : name(name), power(power), cooldown(cooldown) {}
+
+    //Метод вывода информации о способности
+    void printInfo() const {
+        std::cout << "Способность: " << name << "\nСила: " << power << "\nПерезарядка: " << cooldown << "\n";
+    }
+};
+
 
 /*
 
