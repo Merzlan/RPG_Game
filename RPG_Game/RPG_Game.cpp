@@ -9,30 +9,37 @@
 #include <string>
 #include <vector>
 
-//Класс персонажа
-class Player {
-private:
+// Абстрактный класс
+class Character {
+protected:
     std::string name;
     int health;
+
+public:
+    Character(const std::string& name, int health) : name(name), health(health) {}
+    virtual void printInfo() const = 0; // Чисто виртуальный метод
+    virtual ~Character() = default;    // Виртуальный деструктор
+};
+
+// Класс Player
+class Player : public Character {
+protected:
     int level;
     static int playerCount; // Статическое поле
 
 public:
-    // Конструктор
     Player(const std::string& name, int health, int level)
-        : name(name), health(health), level(level) {
-        ++playerCount; // Увеличиваем счетчик при создании объекта
-    }
-
-    // Конструктор копии
-    Player(const Player& other)
-        : name(other.name), health(other.health), level(other.level) {
+        : Character(name, health), level(level) {
         ++playerCount;
     }
 
-    // Оператор присваивания
+    Player(const Player& other)
+        : Character(other.name, other.health), level(other.level) {
+        ++playerCount;
+    }
+
     Player& operator=(const Player& other) {
-        if (this != &other) { // Использование this для проверки самоприсваивания
+        if (this != &other) {
             name = other.name;
             health = other.health;
             level = other.level;
@@ -40,44 +47,63 @@ public:
         return *this;
     }
 
-    // Дружественная функция
-    friend void printPlayer(const Player& player);
-
-    // Перегрузка оператора вывода
-    friend std::ostream& operator<<(std::ostream& os, const Player& player) {
-        os << "Игрок: " << player.name << ", Уровень: " << player.level << ", Здоровье: " << player.health;
-        return os;
-    }
-
-    // Метод для возврата значения через указатель
-    void getHealthPointer(int* healthPtr) const {
-        if (healthPtr) {
-            *healthPtr = health;
-        }
-    }
-
-    // Метод для возврата значения через ссылку
-    void getHealthReference(int& healthRef) const {
-        healthRef = health;
-    }
-
-    // Статический метод
     static int getPlayerCount() {
         return playerCount;
     }
 
-    // Деструктор
-    ~Player() {
-        --playerCount;
+    void printInfo() const override {
+        std::cout << "Игрок: " << name << ", Уровень: " << level
+            << ", Здоровье: " << health << "\n";
+    }
+
+    virtual void attack() const {
+        std::cout << name << " атакует!\n";
+    }
+
+    virtual ~Player() { --playerCount; }
+};
+
+int Player::playerCount = 0;
+
+// Производный класс Warrior
+class Warrior : public Player {
+private:
+    int strength;
+
+public:
+    Warrior(const std::string& name, int health, int level, int strength)
+        : Player(name, health, level), strength(strength) {}
+
+    void attack() const override {
+        Player::attack(); // Вызов метода базового класса
+        std::cout << name << " наносит мощный удар с силой " << strength << "!\n";
+    }
+
+    void printInfo() const override {
+        std::cout << "Воин: " << name << ", Уровень: " << level
+            << ", Здоровье: " << health << ", Сила: " << strength << "\n";
     }
 };
 
-int Player::playerCount = 0; // Инициализация статического поля
+// Производный класс Mage
+class Mage : public Player {
+private:
+    int mana;
 
-// Дружественная функция
-void printPlayer(const Player& player) {
-    std::cout << "Дружественная функция: " << player.name << " (Уровень: " << player.level << ")\n";
-}
+public:
+    Mage(const std::string& name, int health, int level, int mana)
+        : Player(name, health, level), mana(mana) {}
+
+    void attack() const override {
+        std::cout << name << " использует магическую атаку с маной " << mana << "!\n";
+    }
+
+    void printInfo() const override {
+        std::cout << "Маг: " << name << ", Уровень: " << level
+            << ", Здоровье: " << health << ", Мана: " << mana << "\n";
+    }
+};
+
 
 //Класс существа
 class Enemy {
@@ -217,37 +243,28 @@ public:
     }
 };
 
-int main()
-{
-	setlocale(LC_ALL, "RU");
-    try {
-        Player hero("Артур", 100, 1);
-        Player knight("Ланселот", 120, 2);
+int main() {
+    setlocale(LC_ALL, "Rus");
+    Warrior warrior("Рагнар", 150, 5, 30);
+    Mage mage("Мерлин", 100, 7, 50);
 
-        // Демонстрация работы с указателем и ссылкой
-        int healthValue;
-        hero.getHealthPointer(&healthValue);
-        std::cout << "Здоровье через указатель: " << healthValue << "\n";
+    // Демонстрация вызова виртуальной функции через указатель
+    Character* charPtr = &warrior;
+    charPtr->printInfo(); // Печатает информацию о воине
 
-        hero.getHealthReference(healthValue);
-        std::cout << "Здоровье через ссылку: " << healthValue << "\n";
+    charPtr = &mage;
+    charPtr->printInfo(); // Печатает информацию о маге
 
-        // Дружественная функция
-        printPlayer(knight);
+    // Демонстрация перегрузки метода
+    warrior.attack();
+    mage.attack();
 
-        // Перегрузка оператора вывода
-        std::cout << knight << "\n";
+    // Демонстрация вызова базового метода
+    Player player("Гендальф", 100, 3);
+    player.attack();
 
-        // Работа со статическим полем и методом
-        std::cout << "Количество игроков: " << Player::getPlayerCount() << "\n";
-
-        // Исключение
-        throw std::runtime_error("Демонстрация исключения");
-
-    }
-    catch (const std::exception& e) {
-        std::cerr << "Исключение: " << e.what() << "\n";
-    }
+    // Демонстрация работы статического метода
+    std::cout << "Всего игроков: " << Player::getPlayerCount() << "\n";
 
     return 0;
 }
