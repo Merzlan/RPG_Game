@@ -12,22 +12,72 @@
 //Класс персонажа
 class Player {
 private:
-    std::string name;   // Имя персонажа
-    int health;         // Очки здоровья персонажа
-    int level;          // Уровень персонажа
-    int attackPower;    // Сила атаки персонажа
+    std::string name;
+    int health;
+    int level;
+    static int playerCount; // Статическое поле
 
 public:
-    // Конструктор класса Player
-    Player(const std::string& name, int health, int level, int attackPower)
-        : name(name), health(health), level(level), attackPower(attackPower) {}
+    // Конструктор
+    Player(const std::string& name, int health, int level)
+        : name(name), health(health), level(level) {
+        ++playerCount; // Увеличиваем счетчик при создании объекта
+    }
 
-    // Метод для вывода информации о персонаже
-    void printInfo() const {
-        std::cout << "Персонаж: " << name << "\nЗдоровье: " << health << "\nУровень: " << level
-            << "\nСила атаки: " << attackPower << "\n";
+    // Конструктор копии
+    Player(const Player& other)
+        : name(other.name), health(other.health), level(other.level) {
+        ++playerCount;
+    }
+
+    // Оператор присваивания
+    Player& operator=(const Player& other) {
+        if (this != &other) { // Использование this для проверки самоприсваивания
+            name = other.name;
+            health = other.health;
+            level = other.level;
+        }
+        return *this;
+    }
+
+    // Дружественная функция
+    friend void printPlayer(const Player& player);
+
+    // Перегрузка оператора вывода
+    friend std::ostream& operator<<(std::ostream& os, const Player& player) {
+        os << "Игрок: " << player.name << ", Уровень: " << player.level << ", Здоровье: " << player.health;
+        return os;
+    }
+
+    // Метод для возврата значения через указатель
+    void getHealthPointer(int* healthPtr) const {
+        if (healthPtr) {
+            *healthPtr = health;
+        }
+    }
+
+    // Метод для возврата значения через ссылку
+    void getHealthReference(int& healthRef) const {
+        healthRef = health;
+    }
+
+    // Статический метод
+    static int getPlayerCount() {
+        return playerCount;
+    }
+
+    // Деструктор
+    ~Player() {
+        --playerCount;
     }
 };
+
+int Player::playerCount = 0; // Инициализация статического поля
+
+// Дружественная функция
+void printPlayer(const Player& player) {
+    std::cout << "Дружественная функция: " << player.name << " (Уровень: " << player.level << ")\n";
+}
 
 //Класс существа
 class Enemy {
@@ -170,30 +220,34 @@ public:
 int main()
 {
 	setlocale(LC_ALL, "RU");
+    try {
+        Player hero("Артур", 100, 1);
+        Player knight("Ланселот", 120, 2);
 
-    // Создаем статический объект персонажа
-    Player hero("Hero", 100, 1, 10);
-    hero.printInfo();
+        // Демонстрация работы с указателем и ссылкой
+        int healthValue;
+        hero.getHealthPointer(&healthValue);
+        std::cout << "Здоровье через указатель: " << healthValue << "\n";
 
-    // Динамически создаем объект локации
-    Location* dungeon = new Location("Темное и пугающее подземелье");
-    dungeon->addItem(Item("Sword", 150, 0));
-    dungeon->printInfo();
+        hero.getHealthReference(healthValue);
+        std::cout << "Здоровье через ссылку: " << healthValue << "\n";
 
-    // Работа с динамическим массивом объектов Player
-    Player* players = new Player[3]{
-        Player("Радан", 100, 1, 10),
-        Player("Маления", 80, 2, 15),
-        Player("Годфри", 90, 1, 12)
-    };
+        // Дружественная функция
+        printPlayer(knight);
 
-    for (int i = 0; i < 3; ++i) {
-        players[i].printInfo();
+        // Перегрузка оператора вывода
+        std::cout << knight << "\n";
+
+        // Работа со статическим полем и методом
+        std::cout << "Количество игроков: " << Player::getPlayerCount() << "\n";
+
+        // Исключение
+        throw std::runtime_error("Демонстрация исключения");
+
     }
-
-    // Освобождаем динамическую память
-    delete dungeon;
-    delete[] players;
+    catch (const std::exception& e) {
+        std::cerr << "Исключение: " << e.what() << "\n";
+    }
 
     return 0;
 }
