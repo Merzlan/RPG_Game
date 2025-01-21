@@ -92,7 +92,7 @@ int main() {
     }
 
     // 2. Поиск игрока по имени
-    std::string searchName = "Мерлин";
+    std::string searchName = "Мерн";
     auto it = std::find_if(players.begin(), players.end(), [&searchName](const std::shared_ptr<Player>& player) {
         return player->getName() == searchName;
         });
