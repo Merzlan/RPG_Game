@@ -102,7 +102,7 @@ int main() {
         (*it)->printInfo();
     }
     else {
-        std::cout << "\nИгрок с именем " << searchName << " не найден.\n";
+        std::cout << "\nИгрок с инем " << searchName << " не найден.\n";
     }
 
     return 0;
